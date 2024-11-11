@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tresor_revele/menu.dart';
+import 'package:tresor_revele/screens/menu.dart';
 
 void main() {
   runApp(const MyApp());
