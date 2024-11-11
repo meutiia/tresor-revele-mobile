@@ -54,6 +54,9 @@ class _GoodsEntryFormPageState extends State<GoodsEntryFormPage> {
                     if (value == null || value.isEmpty) {
                       return "Goods name cannot be empty!";
                     }
+                    if (value.length > 50) {
+                      return "Goods name cannot be longer than 50 characters!";
+                    }
                     return null;
                   },
                 ),
@@ -129,6 +132,9 @@ class _GoodsEntryFormPageState extends State<GoodsEntryFormPage> {
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
                       return "Category cannot be empty!";
+                    }
+                    if (value.length > 30) {
+                      return "Category cannot be longer than 30 characters!";
                     }
                     return null;
                   },
