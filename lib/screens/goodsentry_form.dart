@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tresor_revele/widgets/left_drawer.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:tresor_revele/screens/menu.dart';
+import 'dart:convert';
 
 class GoodsEntryFormPage extends StatefulWidget {
   const GoodsEntryFormPage({super.key});
@@ -18,6 +22,8 @@ class _GoodsEntryFormPageState extends State<GoodsEntryFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -179,38 +185,38 @@ class _GoodsEntryFormPageState extends State<GoodsEntryFormPage> {
                       backgroundColor: WidgetStateProperty.all(
                           Theme.of(context).colorScheme.primary),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Goods Added!'),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Goods Name: $_name'),
-                                    Text('Price: Rp$_price'),
-                                    Text('Description: $_description'),
-                                    Text('Category: $_category'),
-                                    Text('Condition: $_condition/10'),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    _formKey.currentState!.reset();
-                                  },
-                                ),
-                              ],
+                    onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                            // Kirim ke Django dan tunggu respons
+                            final response = await request.postJson(
+                                "http://localhost:8000/create-flutter/",
+                                jsonEncode(<String, String>{
+                                    'name': _name,
+                                    'price': _price.toString(),
+                                    'description': _description,
+                                    'category': _category,
+                                    'condition': _condition.toString(),
+                                }),
                             );
-                          },
-                        );
-                      }
+                            if (context.mounted) {
+                                if (response['status'] == 'success') {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                    content: Text("Goods catalogue has been updated!"),
+                                    ));
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => MyHomePage()),
+                                    );
+                                } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                        content:
+                                            Text("Error! Please try again."),
+                                    ));
+                                }
+                            }
+                        }
                     },
                     child: const Text(
                       "Save",

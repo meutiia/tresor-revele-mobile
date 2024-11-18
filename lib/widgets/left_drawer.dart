@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tresor_revele/screens/list_goodsentry.dart';
 import 'package:tresor_revele/screens/menu.dart';
 import 'package:tresor_revele/screens/goodsentry_form.dart';
 
@@ -60,6 +61,16 @@ class LeftDrawer extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => GoodsEntryFormPage(),
                   ));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.local_mall_outlined),
+            title: const Text('Goods Catalogue'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const GoodsEntryPage()),
+              );
             },
           ),
         ],

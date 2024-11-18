@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tresor_revele/screens/goodsentry_form.dart';
+import 'package:tresor_revele/screens/list_goodsentry.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:tresor_revele/screens/login.dart';
 
 class ItemHomepage {
   final String name;
@@ -11,26 +15,60 @@ class ItemHomepage {
 
 class ItemCard extends StatelessWidget {
   final ItemHomepage item;
-  
   const ItemCard(this.item, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Material(
-      color: item.color, // Menggunakan warna dari item
+      color: item.color,
       borderRadius: BorderRadius.circular(12),
-      
       child: InkWell(
-        onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
-            );
-
+        onTap: () async {
           if (item.name == "Add Goods") {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text("Kamu telah menekan tombol ${item.name}!")
+                )
+              );
             Navigator.push(context,
               MaterialPageRoute(builder: (context) => const GoodsEntryFormPage()));
+          }
+          else if (item.name == "See Goods") {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text("Kamu telah menekan tombol ${item.name}!")
+                )
+              );
+            Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const GoodsEntryPage()));
+          }
+          else if (item.name == "Logout") {
+            final response = await request.logout(
+              "http://localhost:8000/auth/logout/");
+            String message = response["message"];
+            if (context.mounted) {
+              if (response['status']) {
+                String uname = response["username"];
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("$message See you, $uname!"),
+                ));
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(message),
+                  ),
+                );
+              }
+            }
           }
         },
         child: Container(

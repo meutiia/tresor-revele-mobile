@@ -43,7 +43,7 @@ class MyHomePage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: Text(
-                      'Hello $name, Welcome to Trésor Révélé!',
+                      'Hello, Welcome to Trésor Révélé!',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
