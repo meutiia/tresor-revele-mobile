@@ -40,11 +40,11 @@ class MyHomePage extends StatelessWidget {
             Center(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16.0),
                     child: Text(
                       'Hello, Welcome to Trésor Révélé!',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
                       ),
